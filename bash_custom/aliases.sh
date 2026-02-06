@@ -1,0 +1,163 @@
+alias backup="${BASH_CUSTOM_DIR}/scripts/borg-backup.sh"
+alias backup-servers="${BASH_CUSTOM_DIR}/scripts/pull-server-backups.sh"
+
+alias gss="git status -s"
+
+function gmod {
+	git commit -am "$1" && git push
+}
+
+alias start_docker="~/.zsh_custom/scripts/check_start_docker.sh"
+
+alias dcu="start_docker && docker-compose up"
+alias dcd="docker-compose down"
+
+alias fzcli="'/mnt/c/Program Files/FileZilla Pro CLI/fzcli.exe'"
+
+alias jup="jupyter lab ~/dev/data_sci"
+
+jn-connect() {
+	ssh -N -L localhost:8888:localhost:8889 john@192.168.2.15 -p 2222
+}
+
+# TODO: remove the sessions scripts
+# alias session="~/.zsh_custom/scripts/custom_session.sh"
+
+cargo() {
+	# Bypass all checks and pass through directly
+	if [[ -n "$CARGO_BYPASS_CHECKS" ]]; then
+		command cargo --color=always "$@"
+		return $?
+	fi
+
+	local cmd="$1"
+	shift
+
+	# Handle build/run/check/doc with Clippy first
+	if [[ "$cmd" == "build" || "$cmd" == "run" || "$cmd" == "check" || "$cmd" == "doc" || "$cmd" == "miri" ]]; then
+		echo "Running nightly Clippy before cargo $cmd..."
+		rustup run nightly cargo clippy --color=always --all-targets --all-features -- -D warnings || {
+			echo "❌ Clippy found violations! Aborting cargo $cmd."
+			return 1
+		}
+
+		# Now run the original cargo command
+		command cargo +nightly --color=always "$cmd" "$@"
+
+	# Handle test commands separately
+	elif [[ "$cmd" == "test" ]]; then
+		echo "Running nightly Clippy before cargo test..."
+		rustup run nightly cargo clippy --color=always --all-targets --all-features -- -D warnings || {
+			echo "❌ Clippy found violations! Aborting cargo test."
+			return 1
+		}
+
+		local extra_args=() # arguments like --test
+		local nocapture_flag=""
+
+		# Process remaining arguments
+		while [[ $# -gt 0 ]]; do
+			case "$1" in
+			--test)
+				if [[ -n "$2" ]]; then
+					extra_args+=("--test $2")
+					shift 2
+				else
+					echo "❌ --test flag requires an argument"
+					return 1
+				fi
+				;;
+			--nocapture)
+				nocapture_flag="-- --nocapture"
+				shift
+				;;
+			*)
+				extra_args+=("$1")
+				shift
+				;;
+			esac
+		done
+
+		# Build and run the cargo watch command
+		local watch_cmd="cargo +nightly test ${extra_args[*]} $nocapture_flag"
+		echo "Running: $watch_cmd"
+		eval "command $watch_cmd"
+
+	# Handle watch commands separately
+  elif [[ "$cmd" == "watch" ]]; then
+    shift  # <-- IMPORTANT: drop "watch" so $1 is the first real arg
+  
+    local mode="test"
+    local extra_args=()
+    local nocapture=()
+  
+    # Detect if "miri" is the first argument
+    if [[ "${1:-}" == "miri" ]]; then
+      mode="miri test"
+      shift
+    fi
+  
+    local watch_passthrough=()
+  
+    while [[ $# -gt 0 ]]; do
+      case "$1" in
+        --test)
+          if [[ -n "${2:-}" ]]; then
+            extra_args+=(--test "$2")
+            shift 2
+          else
+            echo "❌ --test flag requires an argument"
+            return 1
+          fi
+          ;;
+        --nocapture)
+          nocapture=(-- --nocapture)
+          shift
+          ;;
+        -x|-w|-s|--workdir|--watch|--shell)
+          watch_passthrough+=("$1" "${2:-}")
+          shift 2
+          ;;
+        --)
+          shift
+          watch_passthrough+=("$@")
+          break
+          ;;
+        *)
+          watch_passthrough+=("$1")
+          shift
+          ;;
+      esac
+    done
+  
+    # Build the second -x command as an array to preserve argument boundaries
+    local watch_x2=()
+    # mode can be "test" or "miri test" (two words). Use eval-safe splitting:
+    if [[ "$mode" == "miri test" ]]; then
+      watch_x2+=(miri test)
+    else
+      watch_x2+=(test)
+    fi
+    watch_x2+=("${extra_args[@]}")
+    watch_x2+=("${nocapture[@]}")
+  
+    echo "Running: cargo +nightly watch -c -x 'clippy …' -x '${watch_x2[*]}'"
+  
+    # Run without a pipeline so signals/PID tracking are correct.
+    command cargo +nightly --color=always watch -c \
+      "${watch_passthrough[@]}" \
+      -x "clippy --color=always --all-targets --all-features -- -D warnings" \
+      -x "${watch_x2[*]}"
+
+	else
+		# All other cargo commands run normally
+		command cargo +nightly --color=always "$cmd" "$@"
+	fi
+}
+
+alias sync-rust-template="$RUST_TEMPLATE_DIR/sync_rust_template.sh"
+alias sync-nvim-projects="${BASH_CUSTOM_DIR}/scripts/update-neovim-projects.sh"
+
+alias pixel-emulator="emulator -avd pixel_9_pro -no-snapshot"
+alias repo-checkin="${BASH_CUSTOM_DIR}/scripts/repo-checkin.sh"
+alias random-theme="${BASH_CUSTOM_DIR}/scripts/omarchy-random-theme.sh"

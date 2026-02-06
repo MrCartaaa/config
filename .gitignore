@@ -1,0 +1,29 @@
+# Ignore everything by default
+*
+
+# Allow these specific files/directories
+!.gitignore
+!starship.toml
+!bash_custom
+!bash_custom/**
+!.util
+!.util/**
+**/private_exports.conf
+!nvim
+!nvim/**
+!tmux
+!tmux/**
+!hypr
+!hypr/**
+!systemd
+!systemd/user
+!systemd/user/repo-checkin.service
+!systemd/user/repo-checkin.timer
+!waybar
+!waybar/**
+!alacritty
+!alacritty/**
+
+# Exclude cache and claude folders everywhere
+**/.cache/
+**/.claude/

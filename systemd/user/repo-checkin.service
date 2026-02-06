@@ -1,0 +1,11 @@
+[Unit]
+Description=Daily Git Repo Checkin
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/flock -n /tmp/repo-checkin.lock %h/.config/bash_custom/scripts/repo-checkin.sh
+Environment=CHECKIN=1
+TimeoutStartSec=30m
+Nice=15

@@ -1,0 +1,4 @@
+set -g update-environment "ssh_auth_sock ssh_agent_pid"
+run-shell 'if ! ssh-add -l >/dev/null 2>&1; then eval ssh_auth_sock=/tmp/ssh-de00d1fmgzmi/agent.38221; export ssh_auth_sock; ssh_agent_pid=38222; export ssh_agent_pid; echo agent pid 38222;; ssh-add ~/.ssh/github; fi'
+set -g default-command "nvim || $shell"
+

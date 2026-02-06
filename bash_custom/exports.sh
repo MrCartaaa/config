@@ -1,0 +1,28 @@
+export genUID=$(id -u)
+export genGID=$(id -g)
+
+# Custom zsh styling config
+export POWERLEVEL9K_DIR_MAX_LENGTH=1
+export POWERLEVEL9K_SHORTEN_STRATEGY=truncate_to_last
+# --- Android SDK (Arch layout) ---
+export ANDROID_SDK_ROOT=/opt/android-sdk
+export ANDROID_HOME=/opt/android-sdk
+export ANDROID_AVD_HOME="$HOME/.android/avd"
+
+export PATH="$PATH:\
+$ANDROID_SDK_ROOT/cmdline-tools/latest/bin:\
+$ANDROID_SDK_ROOT/platform-tools:\
+$ANDROID_SDK_ROOT/emulator"
+
+# Flutter has to be run from a local / user because of grable permission issues
+export PATH="$HOME/.local/share/flutter/bin:$PATH"
+
+# --- Use JDK 17 for Android builds --- 25 available but 17 is only compatible with Flutter
+export JAVA_HOME="/usr/lib/jvm/java-17-openjdk"
+export PATH="$JAVA_HOME/bin:$PATH"
+export GRADLE_USER_HOME="$HOME/.gradle"
+export XDG_DATA_DIRS="/var/lib/flatpak/exports/share:$HOME/.local/share/flatpak/exports/share:${XDG_DATA_DIRS:-/usr/local/share:/usr/share}"
+
+# Optional private overrides
+[[ -f "$HOME/.config/bash_custom/private_exports.conf" ]] && \
+  source "$HOME/.config/bash_custom/private_exports.conf"
