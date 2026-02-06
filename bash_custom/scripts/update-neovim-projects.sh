@@ -24,9 +24,7 @@ DEV_DIR="${HOME}/Work"
 HISTORY_FILE="${HOME}/.local/share/nvim/project_nvim/project_history"
 
 ALWAYS_INCLUDE=(
-  "${HOME}/.config/nvim"
-  "${HOME}/.bash_custom"
-  "${HOME}/.config/hypr"
+  "${HOME}/.config"
 )
 
 # Junk to prune (skip entire subtree)

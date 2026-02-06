@@ -19,9 +19,7 @@ LOG_TS=0
 DEV_DIR="${HOME}/Work"
 
 ALWAYS_INCLUDE=(
-  "${HOME}/.config/nvim"
-  "${HOME}/.config/bash_custom"
-  "${HOME}/.config/hypr"
+  "${HOME}/.config"
 )
 
 PRUNE_NAMES=(

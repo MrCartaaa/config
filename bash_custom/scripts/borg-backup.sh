@@ -8,7 +8,7 @@ fi
 
 # Source logger (resolve git root from script's location, not CWD)
 script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-repo_root="$(cd "$script_dir/.." && pwd)"
+repo_root="$(cd "$script_dir" && git rev-parse --show-toplevel)"
 source "$repo_root/.util/log.sh"
 
 # Logger config
