@@ -8,7 +8,6 @@
 !bash_custom/**
 !.util
 !.util/**
-**/private_exports.conf
 !nvim
 !nvim/**
 !tmux
@@ -27,3 +26,9 @@
 # Exclude cache and claude folders everywhere
 **/.cache/
 **/.claude/
+
+# Exlude the shaders dir in hypr
+hypr/shaders
+
+# Exlude private secrets
+bash_custom/private_exports.conf

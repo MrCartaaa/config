@@ -1,6 +1,0 @@
-name: home
-root: ~
-
-windows:
-  - main:
-    - nvim
