@@ -5,6 +5,12 @@ return {
       keywords = {
         FUTURE = {
           icon = "🧭", -- Choose any icon you like (or "S " for something simple)
+          color = "#FF0",
+          alt = { "FUTURE", "LATER", "ROADMAP", "PLAN" }, -- Optional: additional aliases that map to SAFETY
+          -- sign = false,  -- Optional: disable sign if you don't want it
+        },
+        IMPORTANT = {
+          icon = "‼️", -- Choose any icon you like (or "S " for something simple)
           color = "#B388FF",
           alt = { "FUTURE", "LATER", "ROADMAP", "PLAN" }, -- Optional: additional aliases that map to SAFETY
           -- sign = false,  -- Optional: disable sign if you don't want it
