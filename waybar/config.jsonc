@@ -12,6 +12,7 @@
     "network",
     "pulseaudio",
     "cpu",
+    "custom/systemctl",
     "battery"
   ],
   "hyprland/workspaces": {
@@ -59,6 +60,12 @@
     "format": "󰍛",
     "on-click": "omarchy-launch-or-focus-tui btop",
     "on-click-right": "alacritty"
+  },
+  "custom/systemctl": {
+    "format": " 󰒓 ",
+    "on-click": "omarchy-launch-or-focus org.omarchy.systemctl-tui 'uwsm-app -- xdg-terminal-exec --app-id=org.omarchy.systemctl-tui -e systemctl-tui'",
+    "on-click-right": "omarchy-launch-or-focus org.omarchy.systemctl-tui-sudo 'uwsm-app -- xdg-terminal-exec --app-id=org.omarchy.systemctl-tui-sudo -e sudo systemctl-tui'",
+    "tooltip-format": "Left: user services | Right: system services (sudo)"
   },
 "clock": {
   "format": "{:%a, %b %d %Y %I:%M%p, W%V}",

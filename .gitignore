@@ -23,13 +23,16 @@
 !waybar/**
 !alacritty
 !alacritty/**
-
+!opencode
+!opencode/opencode.json
 
 # OK, now that we have all the top-dir's that we want, there are some dir's nested in them we do not want included
 
 # Exclude cache and claude folders everywhere
 **/.cache/
 **/.claude/
+
+nvim/lazy-lock.json
 
 # Exlude the shaders dir in hypr
 hypr/shaders

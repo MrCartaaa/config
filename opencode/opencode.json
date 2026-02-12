@@ -1,0 +1,18 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "theme": "system",
+  "enabled_providers": [
+    "openai",
+    "anthropic",
+    "llama"
+  ],
+  "provider": {
+    "llama": {
+      "options": {
+        "baseURL": "http://192.168.2.15:8080/v1",
+        "apiKey": "${LLAMA_CPP_API_KEY}"
+      }
+    }
+  },
+  "model": "/home/john/.cache/llama.cpp/unsloth_Qwen3-Coder-30B-A3B-Instruct-GGUF_Qwen3-Coder-30B-A3B-Instruct-UD-Q5_K_XL.gguf"
+}
