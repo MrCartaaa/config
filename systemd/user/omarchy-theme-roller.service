@@ -1,0 +1,11 @@
+# ~/.config/systemd/user/omarchy-theme-roller.service
+[Unit]
+Description=Randomize Omarchy theme every 5-10 hours
+
+[Service]
+ExecStart=%h/.config/bash_custom/scripts/omarchy-theme-roller.sh
+Environment=OMARCHY_THEME_CMD=%h/.config/bash_custom/scripts/omarchy-random-theme.sh
+Restart=always
+
+[Install]
+WantedBy=default.target

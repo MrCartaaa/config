@@ -18,10 +18,14 @@
 !systemd/user
 !systemd/user/repo-checkin.service
 !systemd/user/repo-checkin.timer
+!systemd/user/omarchy-theme-roller.service
 !waybar
 !waybar/**
 !alacritty
 !alacritty/**
+
+
+# OK, now that we have all the top-dir's that we want, there are some dir's nested in them we do not want included
 
 # Exclude cache and claude folders everywhere
 **/.cache/
