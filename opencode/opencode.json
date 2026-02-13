@@ -10,9 +10,9 @@
     "llama": {
       "options": {
         "baseURL": "http://192.168.2.15:8080/v1",
-        "apiKey": "${LLAMA_CPP_API_KEY}"
+        "apiKey": "unused-key"
       }
     }
   },
-  "model": "/home/john/.cache/llama.cpp/unsloth_Qwen3-Coder-30B-A3B-Instruct-GGUF_Qwen3-Coder-30B-A3B-Instruct-UD-Q5_K_XL.gguf"
+"model": "/home/john/.cache/llama.cpp/unsloth_Qwen3-Coder-30B-A3B-Instruct-GGUF_Qwen3-Coder-30B-A3B-Instruct-Q8_0.gguf"
 }
