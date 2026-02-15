@@ -70,6 +70,7 @@ keep_paths=(
   "$home_dir/.gradle/caches/modules-2"
   "$home_dir/.local/share/flutter"
   "$home_dir/.borg-keys"
+  "/etc/systemd/system"
   "/mnt/upload"
 )
 
