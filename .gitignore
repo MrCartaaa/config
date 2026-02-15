@@ -19,6 +19,7 @@
 !systemd/user/repo-checkin.service
 !systemd/user/repo-checkin.timer
 !systemd/user/omarchy-theme-roller.service
+!systemd/user/proton-drive-connect.service
 !waybar
 !waybar/**
 !alacritty

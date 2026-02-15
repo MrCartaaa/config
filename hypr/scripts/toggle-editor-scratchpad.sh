@@ -9,7 +9,7 @@ make_fullscreen() {
     local window_addr="$1"
     hyprctl --batch "
         dispatch setfloating address:$window_addr;
-        dispatch resizewindowpixel exact 95% 85%,address:$window_addr;
+        dispatch resizewindowpixel exact 99% 99%,address:$window_addr;
         dispatch centerwindow
     "
 }
