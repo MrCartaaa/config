@@ -1,0 +1,14 @@
+ [Unit]
+Description=Generic Failure Notification for %i
+
+[Service]
+Type=oneshot
+
+# Desktop notification (best-effort)
+ExecStart=/usr/bin/bash -c '\
+  /usr/bin/notify-send \
+    "Systemd Service Failed" \
+    "Unit: %i\nCheck: journalctl -u %i" || true'
+
+# Always log to syslog
+ExecStartPost=/usr/bin/logger "Systemd failure detected for unit: %i" 

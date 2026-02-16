@@ -2,6 +2,7 @@
 Description=Daily Git Repo Checkin
 Wants=network-online.target
 After=network-online.target
+OnFailure=service-failure-notify@%n.service
 
 [Service]
 Type=oneshot

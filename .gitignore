@@ -19,7 +19,9 @@
 !systemd/user/repo-checkin.service
 !systemd/user/repo-checkin.timer
 !systemd/user/omarchy-theme-roller.service
-!systemd/user/proton-drive-connect.service
+!systemd/user/proton-drive-push.service
+!systemd/user/proton-drive-push.timer
+!systemd/user/service-failure*
 !waybar
 !waybar/**
 !alacritty
@@ -40,3 +42,8 @@ hypr/shaders
 
 # Exlude private secrets
 bash_custom/private_exports.conf
+
+# Exclude Filter files for the proton-sync-drive
+bash_custom/scripts/sync_drive/*.filter
+# Include the example filter
+!bash_custom/scripts/sync_drive/example.filter
