@@ -1,0 +1,10 @@
+[Unit]
+Description=Run Storj version lifecycle cleanup weekly
+
+[Timer]
+OnCalendar=weekly
+Persistent=true
+RandomizedDelaySec=1h
+
+[Install]
+WantedBy=default.target

@@ -78,11 +78,14 @@ By default, when using client mode (`-c`), a filter file is applied if it exists
 - Filter files are located in: `bash_custom/scripts/sync_drive/{client}.filter`
 - Filters use rclone's filter syntax to include/exclude specific files and directories
 
+When using pull mode (`-p`) without specifying a client (`-c`), the `base.filter` file is used if it exists.
+
 #### Disabling Filters
 Use `--no-filter` to sync everything without filtering:
 
 ```bash
 sync-drive -p -- -c ugb --no-filter        # Pull ALL files for UGB, ignoring filter
+sync-drive -p -- -p steele_company/clients/ --no-filter  # Pull ALL files for entire clients directory
 ```
 
 ### Flag Interoperability
@@ -92,7 +95,8 @@ sync-drive -p -- -c ugb --no-filter        # Pull ALL files for UGB, ignoring fi
 | Client only | `-c ugb` | Syncs client folder using filter if available |
 | Client + subpath | `-c ugb -p invoices/` | Syncs only the invoices subfolder within client, still using filter |
 | Client + no filter | `-c ugb --no-filter` | Syncs entire client folder, ignoring filter file |
-| Direct path | `-p steele_company/clients/xyz/` | Syncs exact path, no filter applied |
+| Pull without client | `-p steele_company/clients/xyz/` | Syncs exact path, using base.filter if available |
+| Pull without client + no filter | `-p steele_company/clients/xyz/ --no-filter` | Syncs exact path, no filter applied |
 | Direct path + client | Not supported | Error - use one mode or the other |
 
 ### Dry Run Mode

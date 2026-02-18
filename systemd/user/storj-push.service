@@ -1,0 +1,11 @@
+[Unit]
+Description=Storj push (local to remote)
+OnFailure=service-failure-notify@%n.service
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/flock /tmp/storj-sync.lock /home/jaime/.config/bash_custom/scripts/storj/push_storj.sh
+Nice=10
+IOSchedulingClass=best-effort
+IOSchedulingPriority=7
+TimeoutStartSec=2h

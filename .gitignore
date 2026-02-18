@@ -19,8 +19,12 @@
 !systemd/user/repo-checkin.service
 !systemd/user/repo-checkin.timer
 !systemd/user/omarchy-theme-roller.service
-!systemd/user/proton-drive-push.service
-!systemd/user/proton-drive-push.timer
+!systemd/user/storj-push.service
+!systemd/user/storj-push.timer
+!systemd/user/storj-pull.service
+!systemd/user/storj-pull.timer
+!systemd/user/storj-lifecycle.service
+!systemd/user/storj-lifecycle.timer
 !systemd/user/service-failure*
 !waybar
 !waybar/**

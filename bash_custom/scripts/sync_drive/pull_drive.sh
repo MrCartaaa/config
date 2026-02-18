@@ -113,7 +113,7 @@ fi
 WORKSPACE_ROOT="$HOME/ProtonDrive"
 
 if [[ ! -d "$WORKSPACE_ROOT" ]]; then
-  mkdir -p WORKSPACE_ROOT
+  mkdir -p $WORKSPACE_ROOT
 fi
 
 if [[ -n "$(ls -A "$WORKSPACE_ROOT" 2>/dev/null)" ]]; then
@@ -160,6 +160,14 @@ if [[ -n "$CLIENT" && "$NO_FILTER" = false ]]; then
 
   if [[ ! -f "$FILTER_FILE" ]]; then
     log_exit_bad "Missing filter file: $FILTER_FILE"
+  fi
+elif [[ -z "$CLIENT" && "$NO_FILTER" = false ]]; then
+  # Use base filter when no client specified
+  FILTER_FILE="${FILTER_DIR}/base.filter"
+
+  if [[ ! -f "$FILTER_FILE" ]]; then
+    # If base.filter doesn't exist, don't use any filter
+    FILTER_FILE=""
   fi
 fi
 
