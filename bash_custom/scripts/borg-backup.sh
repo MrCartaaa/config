@@ -72,6 +72,7 @@ keep_paths=(
   "$home_dir/.borg-keys"
   "/etc/systemd/system"
   "/mnt/upload"
+  "$home_dir/Storj"
 )
 
 # Excludes that apply even in allowlist mode (subpaths inside included dirs)
@@ -80,7 +81,6 @@ extra_excludes=(
   --exclude "$home_dir/.gradle/daemon"
   --exclude "$home_dir/.gradle/caches/transforms-*"
   --exclude "$home_dir/.gradle/caches/journal-*"
-  --exclude "$home_dir/.config/nvim"
 )
 
 # Optional: include Documents if it ever becomes non-empty and important
