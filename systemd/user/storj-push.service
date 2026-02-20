@@ -1,5 +1,6 @@
 [Unit]
 Description=Storj push (local to remote)
+After=storj-pull.service
 OnFailure=service-failure-notify@%n.service
 
 [Service]

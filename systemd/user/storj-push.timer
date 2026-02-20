@@ -4,7 +4,6 @@ Description=Run Storj push every 10 minutes
 [Timer]
 OnBootSec=10min
 OnUnitActiveSec=10min
-Persistent=true
 
 [Install]
 WantedBy=default.target

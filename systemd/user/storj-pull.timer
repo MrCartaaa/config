@@ -1,9 +1,9 @@
 [Unit]
 Description=Run Storj pull at login
+After=network-online.target
 
 [Timer]
-OnBootSec=5min
-Persistent=true
+OnStartupSec=5s
 
 [Install]
 WantedBy=default.target
