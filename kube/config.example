@@ -1,0 +1,21 @@
+apiVersion: v1
+kind: Config
+
+clusters:
+  - name: <CLUSTER_NAME>
+    cluster:
+      server: <SERVER>:<PORT;1443>
+      certificate-authority-data: <run `kubectl config view --raw --minify`>
+users:
+  - name: <USER_NAME>
+    user:
+      token: YOUR_BEARER_TOKEN
+
+contexts:
+  - name: <CONTEXT_NAME>
+    context:
+      cluster: <CLUSTER_NAME>
+      user: <USER_NAME>
+      namespace: default
+
+current-context: <CONTEXT_NAME>
