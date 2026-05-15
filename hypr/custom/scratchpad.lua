@@ -190,6 +190,7 @@ local last_workspace = "1"
 hl.on("window.active", function(ws)
   if not ws then return end
 
+  if not ws.workspace then return end
   if not string.match(ws.workspace.name or "", "^special:") then
     last_workspace = ws.workspace.name
   end
