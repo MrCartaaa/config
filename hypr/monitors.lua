@@ -1,7 +1,7 @@
 -- See https://wiki.hypr.land/Configuring/Basics/Monitors/
 -- List current monitors and resolutions possible: hyprctl monitors all
 
-local omarchy_gdk_scale = 2
+local omarchy_gdk_scale = 1
 local omarchy_monitor_scale = "auto"
 
 -- Optimized for retina-class 2x displays, like 13" 2.8K, 27" 5K, 32" 6K.

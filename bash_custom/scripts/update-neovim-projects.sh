@@ -25,6 +25,8 @@ HISTORY_FILE="${HOME}/.local/share/nvim/project_nvim/project_history"
 
 ALWAYS_INCLUDE=(
   "${HOME}/.config"
+  "${HOME}/Work/back_end/ru_statbook" 
+  "${HOME}/Work/back_end/statbook"
 )
 
 # Junk to prune (skip entire subtree)
@@ -46,7 +48,8 @@ declare -A projects
 
 emoji_info "Checking always-included directories..."
 for p in "${ALWAYS_INCLUDE[@]}"; do
-  if [[ -d "$p" ]] && [[ -d "$p/.git" ]]; then
+  # ALWAYS_INCLUDE projects do not require git
+  if [[ -d "$p" ]]; then
     projects["$p"]=1
     emoji_ok "Added → $p"
   else
