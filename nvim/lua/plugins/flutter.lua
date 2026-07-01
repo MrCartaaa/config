@@ -1,4 +1,5 @@
 -- ~/.config/nvim/lua/plugins/flutter.lua
+
 return {
   -- flutter-tools.nvim
   {
@@ -60,14 +61,20 @@ return {
       },
       lsp = {
         color = {
-          enabled = true,
-          virtual_text = true,
+          enabled = false,   -- disable old plugin-managed color to stop warning
         },
-        settings = {
-          showTodos = true,
-          completeFunctionCalls = true,
-          enableSnippets = true,
-        },
+        -- Use native LSP document color instead (new way)
+        on_attach = function(client, bufnr)
+          -- Enable native document color if available (Neovim 0.10+)
+          if client.supports_method("textDocument/documentColor") then
+            vim.lsp.document_color.enable(true, bufnr)
+          end
+        end,
+      },
+      settings = {  -- moved outside lsp for newer versions
+        showTodos = true,
+        completeFunctionCalls = true,
+        enableSnippets = true,
       },
     },
     keys = {

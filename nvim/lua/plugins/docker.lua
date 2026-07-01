@@ -1,57 +1,40 @@
 -- ~/.config/nvim/lua/plugins/docker.lua
 
 return {
-  -- 🐳 nvim-docker (unchanged)
+-- ✅ Better alternative: dockyard.nvim (modern, no LuaRocks dependency)
   {
-    "evanrelf/nvim-docker",
-    dependencies = { "nvim-telescope/telescope.nvim" },
+    "emrearmagan/dockyard.nvim",
+    dependencies = { "nvim-lua/plenary.nvim", "MunifTanjim/nui.nvim" },
     config = function()
-      require("nvim-docker").setup({
-        keys = {
-          { "<leader>Ds", function() require("nvim-docker").container_select("start") end, desc = "Start container" },
-          { "<leader>Dr", function() require("nvim-docker").container_select("restart") end, desc = "Restart" },
-          { "<leader>Dk", function() require("nvim-docker").container_select("stop") end, desc = "Stop" },
-          { "<leader>Dl", function() require("nvim-docker").container_select("logs") end, desc = "Logs (follow)" },
-          { "<leader>Di", function() require("nvim-docker").container_select("inspect") end, desc = "Inspect" },
-          { "<leader>Dx", function() require("nvim-docker").container_select("exec") end, desc = "Exec shell" },
-        },
+      require("dockyard").setup({
+        -- Add your keymaps here if desired
       })
+      -- Example keymap
+      vim.keymap.set("n", "<leader>dd", "<cmd>DockyardToggle<cr>", { desc = "Toggle Dockyard" })
     end,
   },
 
-  -- 🧠 Dockerfile LSP (FIXED)
+  -- 🧠 Dockerfile LSP
   {
     "neovim/nvim-lspconfig",
     config = function()
       local lspconfig = require("lspconfig")
 
-      -- ✅ Explicitly set cmd to use --stdio
       lspconfig.dockerls.setup({
-        cmd = { "docker-langserver", "--stdio" },  -- ← THIS IS CRITICAL!
+        cmd = { "docker-langserver", "--stdio" },
         filetypes = { "dockerfile", "Dockerfile" },
-        capabilities = require("cmp_nvim_lsp").default_capabilities(),
+        -- Use default capabilities if cmp_nvim_lsp is not available
+        capabilities = vim.lsp.protocol.make_client_capabilities(),
         on_attach = function(client, bufnr)
           local opts = { buffer = bufnr, silent = true, noremap = true }
-          vim.keymap.set("n", "gd", vim.diagnostic.open_float, opts)
+          vim.keymap.set("n", "gd", vim.lsp.buf.definition, opts)
           vim.keymap.set("n", "K", vim.lsp.buf.hover, opts)
         end,
       })
     end,
   },
 
-  -- 📦 Docker snippets (optional — works if you use luasnip correctly)
-  {
-    "L3MON4D3/docker-snippets",
-    dependencies = { "hrsh7th/nvim-cmp" },
-    config = function()
-      local luasnip = require("luasnip")
-      luasnip.config.setup({ history = true })
-      -- Load Dockerfile snippets
-      luasnip.load_snippets({ "dockerfile" })
-    end,
-  },
-
-  -- 🧩 nvim-cmp + luasnip adapter
+  -- 🧩 nvim-cmp + luasnip (kept as-is)
   {
     "hrsh7th/nvim-cmp",
     dependencies = { "saadparwaiz1/cmp_luasnip" },

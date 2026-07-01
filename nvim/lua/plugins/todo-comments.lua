@@ -1,26 +1,35 @@
+-- ~/.config/nvim/lua/plugins/todo-comments.lua
+
 return {
   {
     "folke/todo-comments.nvim",
+    dependencies = { "nvim-lua/plenary.nvim" },
     opts = {
       keywords = {
         FUTURE = {
-          icon = "🧭", -- Choose any icon you like (or "S " for something simple)
-          color = "#FF0",
-          alt = { "FUTURE", "LATER", "ROADMAP", "PLAN" }, -- Optional: additional aliases that map to SAFETY
-          -- sign = false,  -- Optional: disable sign if you don't want it
+          icon = "🧭",
+          color = "warning",        -- changed to named color
+          alt = { "FUTURE", "LATER", "ROADMAP", "PLAN" },
         },
         IMPORTANT = {
-          icon = "‼️", -- Choose any icon you like (or "S " for something simple)
-          color = "#B388FF",
-          alt = { "IMPORTANT" }, -- Optional: additional aliases that map to SAFETY
-          -- sign = false,  -- Optional: disable sign if you don't want it
+          icon = "‼️",
+          color = "warning",        -- changed to named color
+          alt = { "IMPORTANT" },
         },
         SAFETY = {
-          icon = "🩺", -- Choose any icon you like (or "S " for something simple)
-          color = "warning", -- Uses a named color: "error", "warning", "info", "hint" (or a hex like "#FF0000")
-          alt = { "SAFETY" }, -- Optional: additional aliases that map to SAFETY
-          -- sign = false,  -- Optional: disable sign if you don't want it
+          icon = "🩺",
+          color = "warning",        -- already good
+          alt = { "SAFETY" },
         },
+      },
+
+      -- Extra safety
+      colors = {
+        error = { "DiagnosticError", "ErrorMsg", "#DC2626" },
+        warning = { "DiagnosticWarn", "WarningMsg", "#FBBF24" },
+        info = { "DiagnosticInfo", "#2563EB" },
+        hint = { "DiagnosticHint", "#10B981" },
+        default = { "Identifier", "#7C3AED" },
       },
     },
   },

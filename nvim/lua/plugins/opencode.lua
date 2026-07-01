@@ -1,32 +1,35 @@
+-- ~/.config/nvim/lua/plugins/opencode.lua
+
 return {
-  "nickjvandyke/opencode.nvim",
-
-  dependencies = {
-    { "folke/snacks.nvim", opts = { input = {}, picker = {}, terminal = {} } },
-  },
-
-  keys = {
-    {
-      "<C-.>",
-      function()
-        local oc = require("opencode")
-        oc.toggle()
-
-        -- focus after the window is created
-        vim.defer_fn(function()
-          -- focus() exists in opencode.nvim; if it fails, we fallback below
-          pcall(oc.focus)
-        end, 100)
-      end,
-      mode = { "n", "t" },
-      desc = "Opencode Toggle (focus)",
-    },
-  },
-
-  config = function()
-    vim.g.opencode_opts = {
-      provider = { enabled = "snacks" },
-    }
-    vim.o.autoread = true
-  end,
+  -- "nickjvandyke/opencode.nvim",
+  --
+  -- dependencies = {
+  --   { "folke/snacks.nvim", opts = { input = {}, picker = {}, terminal = {} } },
+  -- },
+  --
+  -- keys = {
+  --   {
+  --     "<C-.>",
+  --     function()
+  --       if vim.g.opencode_open then
+  --         -- Try to close
+  --         pcall(function() require("opencode").command("close") end)
+  --         vim.g.opencode_open = false
+  --       else
+  --         require("opencode").prompt()
+  --         vim.g.opencode_open = true
+  --       end
+  --     end,
+  --     mode = { "n", "t" },
+  --     desc = "Opencode Toggle",
+  --   },
+  -- },
+  --
+  -- config = function()
+  --   vim.g.opencode_opts = {
+  --     provider = { enabled = "snacks" },
+  --   }
+  --   vim.g.opencode_open = false   -- initial state
+  --   vim.o.autoread = true
+  -- end,
 }
