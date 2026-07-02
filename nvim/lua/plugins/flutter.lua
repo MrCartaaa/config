@@ -60,9 +60,6 @@ return {
         open_cmd = "tabedit",
       },
       lsp = {
-        color = {
-          enabled = false,   -- disable old plugin-managed color to stop warning
-        },
         -- Use native LSP document color instead (new way)
         on_attach = function(client, bufnr)
           -- Enable native document color if available (Neovim 0.10+)
