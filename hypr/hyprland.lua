@@ -8,6 +8,12 @@ package.path = home .. "/.config/?.lua;" ..
 
 local paths = require("default.hypr.paths")
 
+-- Required by Omarchy's default Hyprland modules
+require("default.hypr.helpers")
+
+-- Core Omarchy defaults
+require("default.hypr.autostart")
+
 -- Core Omarchy defaults
 require("default.hypr.autostart")
 require("default.hypr.bindings.media")
