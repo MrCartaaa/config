@@ -5,15 +5,15 @@
 Scratch_height = 0.9
 Scratch_width  = 0.8
 
--- ================== Alacritty Scratchpad ==================
+-- ================== Foot Scratchpad ==================
 
 hl.workspace_rule({
-  workspace = "special:Alacritty-scratchpad",
-  on_created_empty = "alacritty --class Alacritty-scratchpad",
+  workspace = "special:foot-scratchpad",
+  on_created_empty = "sh -c 'footclient --app-id=foot-scratchpad tmux new-session -A -s main || foot --app-id=foot-scratchpad tmux new-session -A -s main'",
 })
 
 hl.window_rule({
-  match       = { class = "^Alacritty-scratchpad$" },
+  match       = { class = "^foot-scratchpad$" },
   float       = true,
   center      = true,
   size        = { string.format("monitor_w * %s", Scratch_width), string.format("monitor_h * %s", Scratch_height) },
@@ -25,7 +25,7 @@ hl.window_rule({
   no_focus    = false
 })
 
-hl.bind("SUPER + GRAVE", hl.dsp.workspace.toggle_special("Alacritty-scratchpad"),
+hl.bind("SUPER + GRAVE", hl.dsp.workspace.toggle_special("foot-scratchpad"),
   { description = "Terminal Scratchpad" }
 )
 
@@ -33,7 +33,7 @@ hl.bind("SUPER + GRAVE", hl.dsp.workspace.toggle_special("Alacritty-scratchpad")
 
 hl.workspace_rule({
   workspace = "special:Nvim-scratchpad",
-  on_created_empty = "alacritty --class Nvim-scratchpad -e nvim",
+  on_created_empty = "sh -c 'footclient --app-id=Nvim-scratchpad nvim || foot --app-id=Nvim-scratchpad nvim'",
 })
 
 hl.window_rule({
@@ -50,6 +50,36 @@ hl.window_rule({
 
 hl.bind("SUPER + E", hl.dsp.workspace.toggle_special("Nvim-scratchpad"),
   { description = "Editor Scratchpad" }
+)
+
+-- ================== Obsidian Scratchpad ==================
+
+hl.workspace_rule({
+  workspace = "special:Obsidian-scratchpad",
+  on_created_empty = "uwsm-app -- obsidian",
+})
+
+hl.window_rule({
+  match       = { class = "^md%.obsidian%.Obsidian$" },
+  workspace   = "special:Obsidian-scratchpad",
+  float       = true,
+  size        = {
+    string.format("monitor_w * %s", Scratch_width),
+    string.format("monitor_h * %s", Scratch_height)
+  },
+  move        = {
+    string.format("monitor_w * %s", (1 - Scratch_width) / 2),
+    string.format("monitor_h * %s", (1 - Scratch_height) / 2)
+  },
+  opacity     = "0.85 override 0.35 override 0.85 override",
+  border_size = 0,
+  xray        = true,
+  rounding    = 14,
+  dim_around  = true,
+})
+
+hl.bind("SUPER + N", hl.dsp.workspace.toggle_special("Obsidian-scratchpad"),
+  { description = "Obsidian Scratchpad" }
 )
 
 -- ================== Multi-WebApp Query Scratchpad ==================
@@ -145,6 +175,10 @@ local function resize_scratchpad(class)
       height = height / 1.5
     end
 
+    if not win.floating then
+      hl.dispatch(hl.dsp.window.float({ action = "set", window = win }))
+    end
+
     hl.dispatch(hl.dsp.window.center())
     hl.dispatch(hl.dsp.window.resize({ x = width, y = height }))
     if is_query then
@@ -159,8 +193,9 @@ end
 
 -- Consolidated window.active hook
 hl.on("window.active", function()
-  resize_scratchpad("Alacritty-scratchpad")
+  resize_scratchpad("foot-scratchpad")
   resize_scratchpad("Nvim-scratchpad")
+  resize_scratchpad("md.obsidian.Obsidian")
 end)
 
 -- =============================================
@@ -169,12 +204,16 @@ end)
 -- =============================================
 
 local special_workspace_rules = {
-  ["special:Alacritty-scratchpad"] = {
-    "^Alacritty%-scratchpad$",
+  ["special:foot-scratchpad"] = {
+    "^foot%-scratchpad$",
   },
 
   ["special:Nvim-scratchpad"] = {
     "^Nvim%-scratchpad$",
+  },
+
+  ["special:Obsidian-scratchpad"] = {
+    "^md%.obsidian%.Obsidian$",
   },
 
   ["special:Query-scratchpad"] = {

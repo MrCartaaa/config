@@ -1,0 +1,5 @@
+-- Extra autostart processes.
+hl.on("hyprland.start", function()
+  hl.exec_cmd("systemctl --user start foot-server.socket foot-server.service")
+  hl.dsp.workspace.toggle_special("foot-scratchpad")
+end)

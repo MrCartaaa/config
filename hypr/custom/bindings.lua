@@ -2,10 +2,26 @@
 -- Custom overrides / additions
 -- ============================================================================
 
+-- Replace Omarchy binds we keep. Preinstalled app/webapp binds are already off.
+-- SUPER+RETURN was Terminal; SUPER+SHIFT+B / SUPER+SHIFT+ALT+B were Browser;
+-- SUPER+SHIFT+F was File manager; media keys were Omarchy audio/brightness.
+hl.unbind("SUPER + RETURN")
+hl.unbind("SUPER + SHIFT + B")
+hl.unbind("SUPER + SHIFT + ALT + B")
+hl.unbind("SUPER + SHIFT + F")
+hl.unbind("XF86AudioRaiseVolume")
+hl.unbind("XF86AudioLowerVolume")
+hl.unbind("XF86AudioMute")
+hl.unbind("XF86AudioPrev")
+hl.unbind("XF86AudioPlay")
+hl.unbind("XF86AudioNext")
+hl.unbind("XF86MonBrightnessUp")
+hl.unbind("XF86MonBrightnessDown")
+
 -- Terminal / tmux
 hl.bind("SUPER + RETURN",
-  hl.dsp.exec_cmd("ghostty"),
-  { description = "Ghostty Terminal" })
+  hl.dsp.exec_cmd("omarchy-launch-terminal"),
+  { description = "Terminal" })
 
 hl.bind("SUPER + ALT + RETURN",
   hl.dsp.exec_cmd([[uwsm-app -- xdg-terminal-exec --dir="$(omarchy-cmd-terminal-cwd)" tmux new]]),
@@ -38,9 +54,8 @@ hl.bind("SUPER + SHIFT + O",
   { description = "Obsidian" })
 
 hl.bind("SUPER + SHIFT + F",
-  hl.dsp.exec_cmd([[uwsm-app -- nautilus --new-window "$(omarchy-cmd-terminal-cwd)"]])
-)
--- File manager (cwd), exec, uwsm-app -- nautilus --new-window "$(omarchy-cmd-terminal-cwd)"
+  hl.dsp.exec_cmd([[uwsm-app -- nautilus --new-window "$(omarchy-cmd-terminal-cwd)"]]),
+  { description = "File manager (cwd)" })
 
 -- Web apps
 hl.bind("SUPER + SHIFT + G",
@@ -67,9 +82,11 @@ hl.bind("SUPER + SHIFT + ALT + X",
   hl.dsp.exec_cmd([[omarchy-launch-webapp "https://x.com/compose/post"]]),
   { description = "X Post" })
 
+-- SUPER+SHIFT+M was Proton Mail (Email).
+hl.unbind("SUPER + SHIFT + M")
 hl.bind("SUPER + SHIFT + M",
-  hl.dsp.exec_cmd([[omarchy-launch-webapp "https://mail.proton.me"]]),
-  { description = "Email" })
+  hl.dsp.exec_cmd([[omarchy-launch-or-focus thunderbird "uwsm-app -- thunderbird"]]),
+  { description = "Thunderbird" })
 
 -- ============================================================================
 -- Resize submap

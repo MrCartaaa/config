@@ -1,48 +1,35 @@
 -- Learn how to configure Hyprland: https://wiki.hypr.land/Configuring/Start/
 
-local home = os.getenv("HOME") or ""
+-- Omarchy's bootstrap keeps path setup out of this user config.
+dofile((os.getenv("OMARCHY_PATH") or "/usr/share/omarchy") .. "/default/hypr/bootstrap.lua")
 
-package.path = home .. "/.config/?.lua;" ..
-    (os.getenv("OMARCHY_PATH") or (home .. "/.local/share/omarchy")) ..
-    "/?.lua;" .. package.path
+-- Disable all Omarchy default bindings. Add your own in hypr/bindings.lua.
+-- omarchy_default_bindings = false
+--
+-- Or disable only bindings for Omarchy's preinstalled apps/web apps while
+-- keeping core window-manager bindings:
+omarchy_preinstalled_bindings = false
 
-local paths = require("default.hypr.paths")
+-- Load Omarchy defaults.
+require("default.hypr.omarchy")
 
--- Required by Omarchy's default Hyprland modules
-require("default.hypr.helpers")
-
--- Core Omarchy defaults
-require("default.hypr.autostart")
-
--- Core Omarchy defaults
-require("default.hypr.autostart")
-require("default.hypr.bindings.media")
-require("default.hypr.bindings.clipboard")
-require("default.hypr.bindings.tiling-v2")
-require("default.hypr.bindings.utilities")
-require("default.hypr.envs")
-require("default.hypr.looknfeel")
-require("default.hypr.input")
-require("default.hypr.windows")
-
--- Theme override (unchanged logic)
-do
-  local theme = io.open(paths.config_home .. "/omarchy/current/theme/hyprland.lua", "r")
-  if theme then
-    theme:close()
-    require("omarchy.current.theme.hyprland")
-  end
-end
-
--- Your personal configs (formerly `source = ~/.config/hypr/*.conf`)
+-- Put your personal overrides in these files. They're loaded after Omarchy's
+-- defaults so package updates can improve the defaults without rewriting your
+-- ~/.config/hypr files.
 require("hypr.monitors")
 require("hypr.input")
 require("hypr.bindings")
 require("hypr.looknfeel")
 require("hypr.autostart")
-require("hypr.custom.scratchpad")
-require("hypr.custom.bindings")
-require("hypr.custom.autostart")
 
--- Toggle config flags dynamically (replaces ~/.local/state/omarchy/toggles/*.conf)
+-- Personal config lives in hypr/custom/. Re-add this block if an update resets this file.
+require("default.hypr.require_all").files(
+  (os.getenv("HOME") or "") .. "/.config/hypr/custom",
+  "hypr.custom"
+)
+
+-- Toggle config flags dynamically.
 require("default.hypr.toggles")
+
+-- Add any other personal Hyprland configuration below.
+-- o.window("qemu", { workspace = "5" })
