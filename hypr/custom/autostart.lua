@@ -23,5 +23,9 @@ if desktop then
 end
 
 o.window(default_browser, { workspace = "1 silent" })
-o.window("org.mozilla.Thunderbird", { workspace = "2 silent" })
+-- Main Thunderbird stays on workspace 2; Write: compose windows go to the compose scratchpad.
+o.window(
+  { class = "org.mozilla.Thunderbird", title = "negative:^Write:" },
+  { workspace = "2 silent" }
+)
 o.window("Spotify", { workspace = "6 silent" })

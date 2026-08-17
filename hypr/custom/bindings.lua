@@ -82,11 +82,11 @@ hl.bind("SUPER + SHIFT + ALT + X",
   hl.dsp.exec_cmd([[omarchy-launch-webapp "https://x.com/compose/post"]]),
   { description = "X Post" })
 
--- SUPER+SHIFT+M was Proton Mail (Email).
-hl.unbind("SUPER + SHIFT + M")
-hl.bind("SUPER + SHIFT + M",
+hl.bind("SUPER + M",
   hl.dsp.exec_cmd([[omarchy-launch-or-focus thunderbird "uwsm-app -- thunderbird"]]),
   { description = "Thunderbird" })
+
+-- SUPER+SHIFT+M compose scratchpad is defined in scratchpad.lua.
 
 -- ============================================================================
 -- Resize submap
