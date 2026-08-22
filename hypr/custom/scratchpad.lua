@@ -272,6 +272,61 @@ hl.bind(
   { description = "Multi-WebApp Query Scratchpad" }
 )
 
+-- ================== News Scratchpad ==================
+
+local News_name = "News-scratchpad"
+
+local news_webapps = {
+  {
+    name  = "Financial Post",
+    cmd   = "omarchy-launch-webapp https://financialpost.com/",
+    class = "financialpost.com"
+  },
+  {
+    name  = "National Post",
+    cmd   = "omarchy-launch-webapp https://nationalpost.com/",
+    class = "nationalpost.com"
+  },
+}
+
+local news_cmds = {}
+
+for _, app in ipairs(news_webapps) do
+  table.insert(news_cmds, app.cmd)
+end
+
+hl.workspace_rule({
+  workspace = "special:" .. News_name,
+  on_created_empty = table.concat(news_cmds, " & ")
+})
+
+for _, app in ipairs(news_webapps) do
+  hl.window_rule({
+    match       = { class = "^brave-" .. app.class .. "__-Default$" },
+    workspace   = "special:" .. News_name,
+    float       = true,
+    size        = {
+      string.format("monitor_w * %s", Scratch_width),
+      string.format("monitor_h * %s", Scratch_height)
+    },
+    move        = {
+      string.format("monitor_w * %s", (1 - Scratch_width) / 2),
+      string.format("monitor_h * %s", (1 - Scratch_height) / 2)
+    },
+    opacity     = "0.85 override 0.35 override 0.85 override",
+    border_size = 0,
+    rounding    = 14,
+    xray        = true,
+    dim_around  = true,
+  })
+end
+
+hl.bind(
+  "SUPER + H",
+  hl.dsp.workspace.toggle_special(News_name),
+  { description = "News Scratchpad" }
+)
+
 -- ================== Thunderbird Compose Scratchpad ==================
 
 local Compose_ws = "compose-scratchpad"
@@ -437,6 +492,11 @@ local special_workspace_rules = {
     "^brave%-grok%.com__%-Default$",
     "^brave%-192%.168%.2%.15__%-Default$",
     "^brave%-perplexity%.ai__%-Default$",
+  },
+
+  ["special:News-scratchpad"] = {
+    "^brave%-financialpost%.com__%-Default$",
+    "^brave%-nationalpost%.com__%-Default$",
   },
 }
 
