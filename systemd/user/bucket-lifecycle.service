@@ -1,0 +1,11 @@
+[Unit]
+Description=Bucket version lifecycle cleanup
+OnFailure=service-failure-notify@%n.service
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/flock -n /tmp/bucket-lifecycle.lock /home/jaime/.config/bash_custom/scripts/bucket/lifecycle_bucket.sh
+Nice=10
+IOSchedulingClass=best-effort
+IOSchedulingPriority=7
+TimeoutStartSec=2h

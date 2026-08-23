@@ -72,7 +72,7 @@ keep_paths=(
   "$home_dir/.borg-keys"
   "/etc/systemd/system"
   "/mnt/upload"
-  "$home_dir/Storj"
+  "$home_dir/bucket"
 )
 
 # Excludes that apply even in allowlist mode (subpaths inside included dirs)

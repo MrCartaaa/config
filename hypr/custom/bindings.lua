@@ -71,8 +71,8 @@ hl.bind("SUPER + SHIFT + SLASH",
   { description = "Passwords" })
 
 hl.bind("SUPER + SHIFT + BACKSLASH",
-  hl.dsp.exec_cmd([[omarchy-launch-webapp "https://us1.storj.io/projects"]]),
-  { description = "Storj" })
+  hl.dsp.exec_cmd([[omarchy-launch-webapp "https://console.hetzner.com/"]]),
+  { description = "Hetzner" })
 
 hl.bind("SUPER + SHIFT + X",
   hl.dsp.exec_cmd([[omarchy-launch-webapp "https://x.com/"]]),
@@ -141,3 +141,22 @@ hl.bind("XF86MonBrightnessUp",
 
 hl.bind("XF86MonBrightnessDown",
   hl.dsp.exec_cmd("brightnessctl set 10%-"))
+
+-- Lid switch: stock Omarchy handlers were omarchy-system-lid-close /
+-- omarchy-hyprland-monitor-clamshell. Wrapper still calls those; when
+-- lid-awake is on (AC only) it also DPMS-offs the undocked panel.
+-- See ~/.config/bash_custom/scripts/lid/README.md
+hl.unbind("switch:on:Lid Switch")
+hl.unbind("switch:off:Lid Switch")
+o.bind(
+  "switch:on:Lid Switch",
+  "Lid close",
+  (os.getenv("HOME") or "") .. "/.config/bash_custom/scripts/lid/lid-event.sh close",
+  { locked = true }
+)
+o.bind(
+  "switch:off:Lid Switch",
+  "Lid open",
+  (os.getenv("HOME") or "") .. "/.config/bash_custom/scripts/lid/lid-event.sh open",
+  { locked = true }
+)

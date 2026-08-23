@@ -1,0 +1,10 @@
+[Unit]
+Description=Run bucket push hourly
+
+[Timer]
+OnCalendar=hourly
+Persistent=false
+AccuracySec=5min
+
+[Install]
+WantedBy=default.target

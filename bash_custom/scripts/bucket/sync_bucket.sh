@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-# Storj sync dispatcher — routes to the appropriate operation script.
+# Bucket sync dispatcher — routes to the appropriate operation script.
 # Supports push, pull, and lifecycle.
 
 source "/home/jaime/.config/.util/log.sh"
@@ -14,12 +14,12 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 # -- help --
 usage() {
   cat <<EOF
-Usage: storj <operation> [args...]
+Usage: bucket <operation> [args...]
 
 Operations:
-  -p, --pull         Pull remote buckets to local (see: storj -p -h)
-  -u, --push         Push local buckets to Storj (see: storj -u -h)
-      --lifecycle    Purge old object versions (see: storj --lifecycle -h)
+  -p, --pull         Pull remote buckets to local (see: bucket -p -h)
+  -u, --push         Push local buckets to remote (see: bucket -u -h)
+      --lifecycle    Purge old object versions (see: bucket --lifecycle -h)
   -h, --help         Show this help message
 EOF
   exit 0
@@ -55,12 +55,12 @@ esac
 # -- dispatch (silent — each script handles its own logging) --
 case "$OPERATION" in
   pull)
-    exec "$SCRIPT_DIR/pull_storj.sh" "$@"
+    exec "$SCRIPT_DIR/pull_bucket.sh" "$@"
     ;;
   push)
-    exec "$SCRIPT_DIR/push_storj.sh" "$@"
+    exec "$SCRIPT_DIR/push_bucket.sh" "$@"
     ;;
   lifecycle)
-    exec "$SCRIPT_DIR/lifecycle_storj.sh" "$@"
+    exec "$SCRIPT_DIR/lifecycle_bucket.sh" "$@"
     ;;
 esac

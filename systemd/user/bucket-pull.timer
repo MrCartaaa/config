@@ -1,5 +1,5 @@
 [Unit]
-Description=Run Storj pull at login
+Description=Run bucket pull at login
 After=network-online.target
 
 [Timer]

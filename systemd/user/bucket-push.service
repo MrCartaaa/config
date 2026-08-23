@@ -1,0 +1,12 @@
+[Unit]
+Description=Bucket push (local to remote)
+After=bucket-pull.service
+OnFailure=service-failure-notify@%n.service
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/flock /tmp/bucket-sync.lock /home/jaime/.config/bash_custom/scripts/bucket/push_bucket.sh
+Nice=10
+IOSchedulingClass=best-effort
+IOSchedulingPriority=7
+TimeoutStartSec=2h

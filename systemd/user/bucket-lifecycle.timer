@@ -1,5 +1,5 @@
 [Unit]
-Description=Run Storj version lifecycle cleanup weekly
+Description=Run bucket version lifecycle cleanup weekly
 
 [Timer]
 OnCalendar=weekly

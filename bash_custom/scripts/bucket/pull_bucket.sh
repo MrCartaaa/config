@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-# Pull Storj buckets to local workspace via rclone.
+# Pull Hetzner Object Storage buckets to local workspace via rclone.
 #
-# Local buckets live in ~/Storj/<bucket>/.
+# Local buckets live in ~/bucket/<bucket>/.
 # This pulls only buckets that already exist locally.
 #
 # Safety rule (safe-practical):
@@ -15,8 +15,8 @@ source "/home/jaime/.config/.util/log.sh"
 LOG_TS=0
 LOG_JSON=0
 
-REMOTE="storj"
-BASE_DIR="$HOME/Storj"
+REMOTE="hetzner"
+BASE_DIR="$HOME/bucket"
 
 DRY_RUN=false
 VERBOSE=false
@@ -28,7 +28,7 @@ PARALLEL=false
 # -- help --
 usage() {
   cat <<EOF
-Usage: storj -p [-n|--dry-run] [-f|--parallel] [-vv|--verbose]
+Usage: bucket -p [-n|--dry-run] [-f|--parallel] [-vv|--verbose]
 
 Options:
   -n, --dry-run    Preview sync without transferring
@@ -67,7 +67,7 @@ done
 
 # -- validate base dir --
 if [[ ! -d "$BASE_DIR" ]]; then
-  log_exit_bad "Storj workspace not found: $BASE_DIR"
+  log_exit_bad "Workspace not found: $BASE_DIR"
 fi
 
 # -- collect local buckets --
@@ -81,7 +81,7 @@ if [[ ${#BUCKETS[@]} -eq 0 ]]; then
   log_exit_ok "No local buckets found in $BASE_DIR — nothing to pull"
 fi
 
-log_info "Pulling from Storj..."
+log_info "Pulling from Hetzner..."
 log_info "Buckets to sync: ${BUCKETS[*]}"
 $DRY_RUN && log_dryrun "Dry run enabled — no changes will be made"
 $VERBOSE && log_info "Verbose mode enabled"
@@ -103,8 +103,8 @@ PRECHECK_FAILED=0
 
 check_bucket() {
   local bucket="$1"
-  local local_path="$BASE_DIR/$bucket/"
-  local remote_path="$REMOTE:$bucket/"
+  local local_path="${BASE_DIR}/${bucket}/"
+  local remote_path="${REMOTE}:${bucket}/"
 
   log_info "[$bucket] Checking local changes..."
 
@@ -158,12 +158,13 @@ fi
 # -- sync all buckets (mirror remote -> local) --
 sync_bucket() {
   local bucket="$1"
-  local local_path="$BASE_DIR/$bucket/"
-  local remote_path="$REMOTE:$bucket/"
+  local local_path="${BASE_DIR}/${bucket}/"
+  local remote_path="${REMOTE}:${bucket}/"
 
   log_info "[$bucket] Syncing $remote_path -> $local_path"
 
-  local flags=(
+  local -a flags
+  flags=(
     sync
     "$remote_path"
     "$local_path"
