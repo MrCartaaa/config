@@ -161,4 +161,13 @@ else
   log_skip "External backup drive not mounted (or repo missing)"
 fi
 
+# Prod DB Borg lives in object storage. USB gets a one-way copy; never ~/bucket.
+if mountpoint -q "$EXTERNAL_MOUNT"; then
+  log_info "Mirroring hetzner:statbook-prod-backups onto USB"
+  /home/jaime/.config/bash_custom/scripts/pull-prod-backups-usb.sh \
+    || log_error "prod-backup USB pull failed (local Borg already done)"
+else
+  log_skip "USB not mounted — skipping prod-backup pull"
+fi
+
 log_exit_ok "Backup complete: $archive"

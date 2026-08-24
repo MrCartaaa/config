@@ -20,6 +20,8 @@ REMOTE="hetzner"
 BASE_DIR="$HOME/bucket"
 STATE_DIR="${XDG_STATE_HOME:-$HOME/.local/state}/bucket-sync"
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+# shellcheck source=protected.sh
+source "${SCRIPT_DIR}/protected.sh"
 
 DRY_RUN=false
 PARALLEL=false
@@ -89,6 +91,7 @@ fi
 BUCKETS=()
 
 if [[ -n "$TARGET_CLIENT" ]]; then
+  refuse_protected_bucket "$TARGET_CLIENT"
   # Single bucket mode — validate it exists locally
   if [[ ! -d "$BASE_DIR/$TARGET_CLIENT" ]]; then
     log_exit_bad "Bucket dir not found: $BASE_DIR/$TARGET_CLIENT"
@@ -98,7 +101,12 @@ else
   # All buckets — every top-level dir in ~/bucket/
   for dir in "$BASE_DIR"/*/; do
     [[ -d "$dir" ]] || continue
-    BUCKETS+=("$(basename "$dir")")
+    name="$(basename "$dir")"
+    if bucket_is_protected "$name"; then
+      log_error "[$name] exists under ~/bucket but is cluster-owned — will not push"
+      log_exit_bad "Remove ~/bucket/${name}; prod DB backups must not live in ~/bucket"
+    fi
+    BUCKETS+=("$name")
   done
 fi
 

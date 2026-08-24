@@ -15,6 +15,8 @@ LOG_JSON=0
 REMOTE="hetzner"
 BASE_DIR="$HOME/bucket"
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+# shellcheck source=protected.sh
+source "${SCRIPT_DIR}/protected.sh"
 
 # Default retention: 90 days
 RETENTION_DAYS=90
@@ -84,6 +86,7 @@ fi
 BUCKETS=()
 
 if [[ -n "$TARGET_CLIENT" ]]; then
+  refuse_protected_bucket "$TARGET_CLIENT"
   if [[ ! -d "$BASE_DIR/$TARGET_CLIENT" ]]; then
     log_exit_bad "Bucket dir not found: $BASE_DIR/$TARGET_CLIENT"
   fi
@@ -91,7 +94,11 @@ if [[ -n "$TARGET_CLIENT" ]]; then
 else
   for dir in "$BASE_DIR"/*/; do
     [[ -d "$dir" ]] || continue
-    BUCKETS+=("$(basename "$dir")")
+    name="$(basename "$dir")"
+    if bucket_is_protected "$name"; then
+      log_exit_bad "Remove ~/bucket/${name}; prod DB backups must not live in ~/bucket"
+    fi
+    BUCKETS+=("$name")
   done
 fi
 

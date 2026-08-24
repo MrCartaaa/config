@@ -15,6 +15,10 @@ source "/home/jaime/.config/.util/log.sh"
 LOG_TS=0
 LOG_JSON=0
 
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+# shellcheck source=protected.sh
+source "${SCRIPT_DIR}/protected.sh"
+
 REMOTE="hetzner"
 BASE_DIR="$HOME/bucket"
 
@@ -74,7 +78,11 @@ fi
 BUCKETS=()
 for dir in "$BASE_DIR"/*/; do
   [[ -d "$dir" ]] || continue
-  BUCKETS+=("$(basename "$dir")")
+  name="$(basename "$dir")"
+  if bucket_is_protected "$name"; then
+    log_exit_bad "Remove ~/bucket/${name}; prod DB backups must not live in ~/bucket (USB only)"
+  fi
+  BUCKETS+=("$name")
 done
 
 if [[ ${#BUCKETS[@]} -eq 0 ]]; then

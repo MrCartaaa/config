@@ -22,6 +22,8 @@ Each top-level directory in `~/bucket/` maps 1:1 to a remote bucket.
 
 Unrelated buckets already on the remote (for example `mae-tech`) are left alone.
 
+**`statbook-prod-backups` is cluster-owned.** Never create `~/bucket/statbook-prod-backups`. `bucket -u` / `-p` / `--lifecycle` refuse that name so the laptop cannot override the prod DB Borg repo. USB copy is `borg-backup.sh` → `/mnt/ext_backup/statbook-prod-backups` (rclone **from** the remote only).
+
 ## Usage
 
 ```bash

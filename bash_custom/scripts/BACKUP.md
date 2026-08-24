@@ -145,6 +145,8 @@ The script performs the following steps:
 
 Failure or absence of the external drive does **not** cause the backup to fail.
 
+When the USB is mounted, the same run also rclone-syncs **from** `hetzner:statbook-prod-backups` to `/mnt/ext_backup/statbook-prod-backups` (one-way). That tree must never exist under `~/bucket/` (hourly `bucket -u` would overwrite the cloud repo).
+
 ---
 
 ### Prune utility (manual only)
