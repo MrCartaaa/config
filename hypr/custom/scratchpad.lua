@@ -278,6 +278,11 @@ local News_name = "News-scratchpad"
 
 local news_webapps = {
   {
+    name  = "Ground News",
+    cmd   = "omarchy-launch-webapp https://ground.news",
+    class = "ground.news"
+  },
+  {
     name  = "Financial Post",
     cmd   = "omarchy-launch-webapp https://financialpost.com/",
     class = "financialpost.com"
@@ -416,49 +421,53 @@ hl.bind("SUPER + SHIFT + M", function()
 end, { description = "Compose email" })
 
 -- ================== Resize Helper ==================
+-- window.resize during mapWindow aborts Hyprland (CSpace::resizeTarget).
+-- Query/news pads are sized by window_rule; defer the rest until mapped.
 
-local function resize_scratchpad(class)
+local resize_classes = {
+  ["foot-scratchpad"] = true,
+  ["Nvim-scratchpad"] = true,
+  ["md.obsidian.Obsidian"] = true,
+}
+
+local resize_pending = false
+
+local function apply_scratchpad_resize()
+  resize_pending = false
   local win = hl.get_active_window()
-  if not win then return end
-
-  local is_query = string.find(win.class or "", "^brave%-.*__.*%-Default$")
-  local is_compose = is_compose_window(win)
-  if win.class ~= class and not is_query and not (class == "__compose__" and is_compose) then
+  if not win or not win.mapped or not win.floating then
+    return
+  end
+  if not resize_classes[win.class or ""] and not is_compose_window(win) then
     return
   end
 
   local mon = hl.get_active_monitor()
-  if mon then
-    local width  = math.floor(mon.width * 0.78)
-    local height = math.floor(mon.height * 0.72)
+  if not mon then return end
 
-    if mon.id == 0 then
-      width  = width / 1.5
-      height = height / 1.5
-    end
-
-    if not win.floating then
-      hl.dispatch(hl.dsp.window.float({ action = "set", window = win }))
-    end
-
-    hl.dispatch(hl.dsp.window.center())
-    hl.dispatch(hl.dsp.window.resize({ x = width, y = height }))
-    if is_query then
-      local ws_windows = hl.get_workspace_windows(hl.get_active_window().workspace) or {}
-      for _, w in ipairs(ws_windows) do
-        hl.dispatch(hl.dsp.window.center({ window = w }))
-        hl.dispatch(hl.dsp.window.resize({ x = width, y = height, window = w }))
-      end
-    end
+  local width  = math.floor(mon.width * 0.78)
+  local height = math.floor(mon.height * 0.72)
+  if mon.id == 0 then
+    width  = width / 1.5
+    height = height / 1.5
   end
+
+  hl.dispatch(hl.dsp.window.center({ window = win }))
+  hl.dispatch(hl.dsp.window.resize({ x = width, y = height, window = win }))
 end
 
--- Consolidated window.active hook
+local resize_timer = hl.timer(apply_scratchpad_resize, { timeout = 50, type = "oneshot" })
+resize_timer:set_enabled(false)
+
 hl.on("window.active", function()
-  resize_scratchpad("foot-scratchpad")
-  resize_scratchpad("Nvim-scratchpad")
-  resize_scratchpad("md.obsidian.Obsidian")
-  resize_scratchpad("__compose__")
+  if resize_pending then return end
+  local win = hl.get_active_window()
+  if not win then return end
+  if not resize_classes[win.class or ""] and not is_compose_window(win) then
+    return
+  end
+  resize_pending = true
+  resize_timer:set_enabled(true)
 end)
 
 -- =============================================
@@ -487,17 +496,21 @@ local special_workspace_rules = {
     "^org%.mozilla%.Thunderbird$",
   },
 
-  ["special:Query-scratchpad"] = {
-    "^brave%-chatgpt%.com__%-Default$",
-    "^brave%-grok%.com__%-Default$",
-    "^brave%-192%.168%.2%.15__%-Default$",
-    "^brave%-perplexity%.ai__%-Default$",
-  },
+  ["special:Query-scratchpad"] = (function()
+    local pats = {}
+    for _, app in ipairs(webapps) do
+      pats[#pats + 1] = "^brave%-" .. app.class:gsub("([^%w])", "%%%1") .. "__%-Default$"
+    end
+    return pats
+  end)(),
 
-  ["special:News-scratchpad"] = {
-    "^brave%-financialpost%.com__%-Default$",
-    "^brave%-nationalpost%.com__%-Default$",
-  },
+  ["special:News-scratchpad"] = (function()
+    local pats = {}
+    for _, app in ipairs(news_webapps) do
+      pats[#pats + 1] = "^brave%-" .. app.class:gsub("([^%w])", "%%%1") .. "__%-Default$"
+    end
+    return pats
+  end)(),
 }
 
 local last_workspace = "1"
