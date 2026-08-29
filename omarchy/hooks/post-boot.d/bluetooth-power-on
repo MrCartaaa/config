@@ -1,0 +1,5 @@
+#!/bin/bash
+# Power Bluetooth on at graphical login. Safer than before-login (greeter
+# stays quiet); systemd-rfkill would otherwise restore a previous off state
+# and hide the bar icon until something else unblocked the radio.
+omarchy-bluetooth-power on

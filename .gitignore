@@ -17,6 +17,13 @@
 # Omarchy updates rewrite user shell.json; keep a git copy so we can restore.
 !omarchy/
 !omarchy/shell.json
+!omarchy/hooks/
+!omarchy/hooks/post-boot.d/
+!omarchy/hooks/post-boot.d/**
+omarchy/hooks/**/*.sample
+!omarchy/plugins/
+!omarchy/plugins/jaime.bluetooth/
+!omarchy/plugins/jaime.bluetooth/**
 !systemd
 !systemd/user
 !systemd/user/repo-checkin.service
