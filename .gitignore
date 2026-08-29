@@ -14,6 +14,9 @@
 !tmux/**
 !hypr
 !hypr/**
+# Omarchy updates rewrite user shell.json; keep a git copy so we can restore.
+!omarchy/
+!omarchy/shell.json
 !systemd
 !systemd/user
 !systemd/user/repo-checkin.service
