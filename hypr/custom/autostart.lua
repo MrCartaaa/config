@@ -1,4 +1,26 @@
 -- Extra autostart processes.
+--
+-- Login pages: 1 browser and 2 email on HDMI; 6 Spotify on the laptop.
+-- If HDMI is unplugged, Hyprland places those workspaces on eDP-1.
+
+hl.workspace_rule({
+  workspace = "1",
+  monitor = "HDMI-A-1",
+  default = true,
+  persistent = true,
+})
+hl.workspace_rule({
+  workspace = "2",
+  monitor = "HDMI-A-1",
+  persistent = true,
+})
+hl.workspace_rule({
+  workspace = "6",
+  monitor = "eDP-1",
+  default = true,
+  persistent = true,
+})
+
 hl.on("hyprland.start", function()
   hl.exec_cmd("systemctl --user start foot-server.socket foot-server.service")
   hl.dsp.workspace.toggle_special("foot-scratchpad")
