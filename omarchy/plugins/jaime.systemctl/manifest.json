@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "id": "jaime.systemctl",
+  "name": "systemctl",
+  "version": "1.0.0",
+  "author": "jaime",
+  "description": "Open systemctl-tui to review running systemd services",
+  "kinds": [
+    "bar-widget"
+  ],
+  "entryPoints": {
+    "barWidget": "BarWidget.qml"
+  },
+  "barWidget": {
+    "displayName": "systemctl",
+    "description": "Left-click: user services. Right-click: system services (sudo).",
+    "category": "System",
+    "allowMultiple": false,
+    "defaultSection": "right"
+  }
+}

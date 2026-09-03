@@ -24,6 +24,8 @@ omarchy/hooks/**/*.sample
 !omarchy/plugins/
 !omarchy/plugins/jaime.bluetooth/
 !omarchy/plugins/jaime.bluetooth/**
+!omarchy/plugins/jaime.systemctl/
+!omarchy/plugins/jaime.systemctl/**
 !systemd
 !systemd/user
 !systemd/user/repo-checkin.service
