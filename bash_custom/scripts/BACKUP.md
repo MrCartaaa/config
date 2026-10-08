@@ -84,13 +84,17 @@ This captures system-level configuration required to reconstruct services, syste
 
 ### 2. User directories and config
 
-* `~/Work` — project and work files
+* `~/Work` — project and work files (build and cache trees under it are excluded; see below)
 * `~/.ssh` — SSH keys and config
 * `~/.gnupg` — GPG keys
-* `~/.bash_custom` — shell customizations
-* `~/.config` — application configuration (**excluding** `~/.config/nvim`), includes:
+* `~/.config` — application configuration, included whole. This covers:
+  * `~/.config/bash_custom` — shell customizations
+  * `~/.config/nvim` — Neovim configuration
   * `~/.config/systemd/user/` — user-level systemd services and timers (e.g., `repo-checkin.service`)
 * `~/Documents` — personal documents (if the directory exists)
+* `~/bucket` — rclone bucket mirror (production DB backups must not live here)
+* `~/.borg-keys` — exported Borg keys kept on this machine
+* `/mnt/upload`
 
 ### 3. User data directories
 
@@ -98,7 +102,16 @@ This captures system-level configuration required to reconstruct services, syste
 * `~/.local/share/fonts` — custom fonts
 * `~/.local/share/applications` — custom .desktop files
 
-### 4. Package manifest
+### 4. Dev toolchains
+
+These are reinstallable, but they are on the allowlist:
+
+* `/opt/android-sdk`
+* `~/.android` — Android user data, including `~/.android/avd`
+* `~/.gradle/wrapper` and `~/.gradle/caches/modules-2`
+* `~/.local/share/flutter`
+
+### 5. Package manifest
 
 * `pkglist.txt`
 
@@ -115,12 +128,32 @@ It is used during recovery to reinstall the system's software set.
 
 ## What Is Excluded
 
-The backup explicitly excludes:
+Two layers keep regenerable files out of an archive.
 
-* cache directories (via Borg's `--exclude-caches` flag)
-* `~/.config/nvim` — Neovim configuration (managed separately or regenerated)
+**Not on the allowlist.** Anything outside the paths above is not backed up. That covers the rest of the home directory (downloads, `~/.cache`, other build output, and so on).
 
-The allowlist approach means only the paths listed above are backed up. Everything else in the home directory (downloads, caches, build artifacts, etc.) is implicitly excluded.
+**Patterns inside the allowlist.** `~/Work` is included, so Cargo `target/` directories and similar trees would otherwise be archived. Borg's default `--exclude` style is fnmatch: `*` matches across `/`, and a matching directory is not recursed into. The script excludes:
+
+| Pattern | Skips |
+| --- | --- |
+| `*/target` | Cargo build output, including `target/debug`, `target/llvm-cov-target`, and the scratch copies under `~/Work/tmp` |
+| `*/node_modules` | JavaScript dependencies |
+| `*/__pycache__` and `*.pyc` | Python bytecode |
+| `*/.venv` | Python virtualenvs |
+| `*/.next` | Next.js build output |
+| `*/.dart_tool` | Dart/Flutter tool cache |
+| `*/.ipynb_checkpoints` | Jupyter's extra copy of each notebook. The `.ipynb` file itself is still backed up, including any outputs saved inside it |
+
+`*/target` matches a directory named `target`. It does not match `target.rs` or a file whose name only contains the word "target". A source directory that is actually named `target` would also be skipped. Do not use a broad `*/build` or `*/dist` pattern; those names show up as real source trees.
+
+`--exclude-caches` still drops directories that contain a `CACHEDIR.TAG` file. Cargo and Node do not write that tag, which is why the patterns above exist.
+
+Also excluded inside the allowlist:
+
+* `~/.gradle/daemon`, `~/.gradle/caches/transforms-*`, and `~/.gradle/caches/journal-*` (the Gradle module cache stays)
+* Brave/Chromium files that vanish or lock during the run: `.org.chromium.Chromium.*`, `SingletonLock`, `SingletonSocket`, `SingletonCookie`
+
+Archives created before these patterns still hold the old build trees. They shrink only as retention drops those archives and `borg compact` reclaims the space. The nightly prune uses 7 daily, 4 weekly, and 6 monthly archives. `borg-prune.sh` is the manual way to keep only the latest archive and compact immediately. It deletes the rest with no undo.
 
 ---
 
@@ -128,7 +161,7 @@ The allowlist approach means only the paths listed above are backed up. Everythi
 
 ### Primary backup script (automated)
 
-* `~/.bash_custom/scripts/borg-backup.sh`
+* `~/.config/bash_custom/scripts/borg-backup.sh`
 
 This script runs automatically via a **systemd timer** at **2:30 AM daily**. If the system is off at that time, the backup runs when the system next boots (persistent timer).
 
@@ -151,14 +184,14 @@ When the USB is mounted, the same run also rclone-syncs **from** `hetzner:statbo
 
 ### Prune utility (manual only)
 
-* `~/.bash_custom/scripts/borg-prune.sh`
+* `~/.config/bash_custom/scripts/borg-prune.sh`
 
 This is a **manual utility** for aggressively reducing repository size. It is **not run automatically**.
 
 Use this script when you need to reclaim disk space by keeping only the most recent archive:
 
 ```bash
-~/.bash_custom/scripts/borg-prune.sh /mnt/backup/borg
+~/.config/bash_custom/scripts/borg-prune.sh /mnt/backup/borg
 ```
 
 **Warning:** This is destructive. It deletes all archives except the latest one and compacts the repository. There is no undo.
@@ -455,7 +488,7 @@ It is possible to:
 This backup system does not attempt to:
 
 * snapshot the running OS image
-* preserve caches or temporary build artifacts
+* preserve caches or temporary build artifacts, including Cargo `target/`, `node_modules`, Python bytecode and virtualenvs, Next.js output, Dart tool caches, and Jupyter `.ipynb_checkpoints` that live under an allowlisted directory
 * back up the entire home directory (uses explicit allowlist instead)
 * optimize for minimal storage usage at the expense of clarity
 

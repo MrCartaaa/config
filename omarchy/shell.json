@@ -10,13 +10,13 @@
           "id": "omarchy.weather"
         },
         {
+          "id": "omarchy.keyboard-layout"
+        },
+        {
           "format": "dddd, MMMM dd, yyyy hh:mm AP - 'WEEK 'ww",
           "formatAlt": "ddd, MMM dd yyyy hh:mmAP, 'W'ww",
           "id": "omarchy.clock",
           "verticalFormat": "HH\n—\nmm"
-        },
-        {
-          "id": "omarchy.keyboard-layout"
         },
         {
           "id": "omarchy.system-update"

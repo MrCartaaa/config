@@ -60,9 +60,7 @@ create_args=(
   --stdin-name "pkglist.txt"
 )
 
-# Explicit KEEP paths
-# - Keep general config, but exclude nvim by *not* including ~/.config/nvim directly.
-# - For ~/.config, we include it but add an explicit exclude for nvim.
+# Explicit KEEP paths. ~/.config is included whole.
 keep_paths=(
   "/etc"
   "$home_dir/Work"
@@ -96,6 +94,19 @@ extra_excludes=(
   --exclude '*/SingletonLock'
   --exclude '*/SingletonSocket'
   --exclude '*/SingletonCookie'
+  # Regenerable build and cache trees inside the allowlist (mostly ~/Work).
+  # --exclude is fnmatch: '*' matches across '/'. '*/target' matches a directory
+  # named target anywhere and does not recurse into it. It does not match
+  # target.rs or a file whose name merely contains "target".
+  --exclude '*/target'
+  --exclude '*/node_modules'
+  --exclude '*/__pycache__'
+  --exclude '*.pyc'
+  --exclude '*/.venv'
+  --exclude '*/.next'
+  --exclude '*/.dart_tool'
+  # Jupyter writes a full extra copy of each notebook here. The .ipynb itself stays.
+  --exclude '*/.ipynb_checkpoints'
 )
 
 # Optional: include Documents if it ever becomes non-empty and important
