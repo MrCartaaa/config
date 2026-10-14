@@ -17,6 +17,7 @@ declare -A CLUSTER_PORT=(
   [widget]=5434
   [queue]=5435
   [merchant]=5436
+  [email]=5437
 )
 
 declare -A SERVICE_NAME=(
@@ -25,6 +26,7 @@ declare -A SERVICE_NAME=(
   [widget]=postgres-widget
   [queue]=postgres-queue
   [merchant]=postgres-merchant
+  [email]=postgres-email
 )
 
 # 1:1 local wiring: the wire port IS the local bind port (connect → localhost:N).
@@ -36,6 +38,7 @@ declare -A PORT_STAGING=(
   [widget]=15434
   [queue]=15435
   [merchant]=15436
+  [email]=15437
 )
 
 declare -A PORT_PROD=(
@@ -44,6 +47,7 @@ declare -A PORT_PROD=(
   [widget]=25434
   [queue]=25435
   [merchant]=25436
+  [email]=25437
 )
 
 declare -A NS=(
@@ -51,7 +55,7 @@ declare -A NS=(
   [prod]=statbook-production
 )
 
-ALL_SERVICES=(api accounting widget queue merchant)
+ALL_SERVICES=(api accounting widget queue merchant email)
 
 # ── logging ────────────────────────────────────────────────────────────────
 
@@ -101,6 +105,7 @@ ${C_BOLD}SERVICE FLAGS${C_RESET} (optional; default = all services)
   --widget-service | --widget_service | --widget
   --queue-service | --queue_service | --queue
   --merchant-service | --merchant_service | --merchant
+  --email-service | --email_service | --email
   --all-services         Explicitly select every service (default when none given)
 
 ${C_BOLD}OTHER${C_RESET}
@@ -109,9 +114,9 @@ ${C_BOLD}OTHER${C_RESET}
   --list                 Print local port map and exit
 
 ${C_BOLD}PORTS (1:1 local — connect to localhost:N)${C_RESET}
-  staging:  api 15432  accounting 15433  widget 15434  queue 15435  merchant 15436
-  prod:     api 25432  accounting 25433  widget 25434  queue 25435  merchant 25436
-  (cluster Service ports stay 5432–5436; only used as the kubectl remote target)
+  staging:  api 15432  accounting 15433  widget 15434  queue 15435  merchant 15436  email 15437
+  prod:     api 25432  accounting 25433  widget 25434  queue 25435  merchant 25436  email 25437
+  (cluster Service ports stay 5432–5437; only used as the kubectl remote target)
 
 ${C_BOLD}EXAMPLES${C_RESET}
   wire-statbook-dbs --staging
@@ -148,6 +153,7 @@ EOF
     widget     → ru_widget_service
     queue      → ru_queue_service
     merchant   → ru_merchant_service
+    email      → ru_email_service
 
   Prefer user ${C_BOLD}app${C_RESET} (or db_migrator) from Vault secret/data/postgres/{env}/{service}.
   Set search_path=app (Mae).
@@ -174,7 +180,7 @@ normalize_service_flag() {
   raw="${raw#--}"
   raw="${raw%-service}"
   case "$raw" in
-    api|accounting|widget|queue|merchant) echo "$raw" ;;
+    api|accounting|widget|queue|merchant|email) echo "$raw" ;;
     all) echo "all" ;;
     *) echo "" ;;
   esac
@@ -217,7 +223,8 @@ while [[ $# -gt 0 ]]; do
     --accounting-service|--accounting_service|--accounting|\
     --widget-service|--widget_service|--widget|\
     --queue-service|--queue_service|--queue|\
-    --merchant-service|--merchant_service|--merchant)
+    --merchant-service|--merchant_service|--merchant|\
+    --email-service|--email_service|--email)
       key="$(normalize_service_flag "$1")"
       [[ -n "$key" ]] || die "internal: bad service flag parse: $1"
       selected_services+=("$key")

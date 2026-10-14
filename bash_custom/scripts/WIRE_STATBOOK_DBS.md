@@ -27,7 +27,7 @@ Inside the cluster the Service still listens on 5432–5436; kubectl maps `local
 - Cluster access (same context you use for Argo / `statbook-staging`)
 - Credentials from **Vault** (this script does **not** fetch passwords):
 
-  `secret/data/postgres/{staging|production}/{api|accounting|widget|queue|merchant}`
+  `secret/data/postgres/{staging|production}/{api|accounting|widget|queue|merchant|email}`
 
 ## Usage
 
@@ -38,7 +38,7 @@ wire-statbook-dbs --staging
 # All services, production only
 wire-statbook-dbs --prod
 
-# Both environments, all services (10 forwards)
+# Both environments, all services (12 forwards)
 wire-statbook-dbs --staging --prod
 
 # Staging, only API + queue
@@ -65,6 +65,7 @@ wire-statbook-dbs --staging --api-service --dry-run
 | `--widget-service` / … | `postgres-widget` |
 | `--queue-service` / … | `postgres-queue` |
 | `--merchant-service` / … | `postgres-merchant` |
+| `--email-service` / `--email_service` / `--email` | `postgres-email` |
 | `--all-services` | Every service (default when no service flag is given) |
 | `--dry-run` | Print plan, start nothing |
 | `--list` | Port / DB name cheat sheet |
@@ -73,7 +74,7 @@ wire-statbook-dbs --staging --api-service --dry-run
 **Rules**
 
 1. At least one of `--staging` or `--prod` is **required**.
-2. Service flags are optional; if omitted, **all five** services are forwarded for each selected env.
+2. Service flags are optional; if omitted, **all six** services are forwarded for each selected env.
 3. Service flags alone (without an env flag) are an error.
 
 Leave the terminal open. **Ctrl-C** kills every forward cleanly.
@@ -87,6 +88,7 @@ Leave the terminal open. **Ctrl-C** kills every forward cleanly.
 | widget | **15434** | **25434** | 5434 | `postgres-widget` |
 | queue | **15435** | **25435** | 5435 | `postgres-queue` |
 | merchant | **15436** | **25436** | 5436 | `postgres-merchant` |
+| email | **15437** | **25437** | 5437 | `postgres-email` |
 
 Staging uses `15xxx`, prod `25xxx`, so both can run at once.
 
@@ -111,6 +113,7 @@ Staging uses `15xxx`, prod `25xxx`, so both can run at once.
 | widget | `ru_widget_service` |
 | queue | `ru_queue_service` |
 | merchant | `ru_merchant_service` |
+| email | `ru_email_service` |
 
 ### Example (`psql`, staging API)
 
@@ -148,6 +151,6 @@ postgres://app:PASSWORD@127.0.0.1:15432/statbook?options=-csearch_path%3Dapp
 
 ## Related
 
-- Vault paths: `secret/data/postgres/{staging\|production}/{service}`
+- Vault paths: `secret/data/postgres/{staging\|production}/{service}` (`email` included)
 - Argo namespaces: `statbook-staging`, `statbook-production`
 - K8s secrets (synced by ESO): `postgres-{service}-secret`
