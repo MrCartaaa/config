@@ -42,6 +42,8 @@ omarchy/hooks/**/*.sample
 !waybar/**
 !alacritty
 !alacritty/**
+!foot
+!foot/foot.ini
 !opencode
 !opencode/opencode.json
 !kube

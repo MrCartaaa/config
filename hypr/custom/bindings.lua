@@ -82,6 +82,8 @@ hl.bind("SUPER + SHIFT + ALT + X",
   hl.dsp.exec_cmd([[omarchy-launch-webapp "https://x.com/compose/post"]]),
   { description = "X Post" })
 
+-- SUPER+M was also Minimize window. Keep Thunderbird only.
+hl.unbind("SUPER + M")
 hl.bind("SUPER + M",
   hl.dsp.exec_cmd([[omarchy-launch-or-focus thunderbird "uwsm-app -- thunderbird"]]),
   { description = "Thunderbird" })

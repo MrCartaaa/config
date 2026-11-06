@@ -25,8 +25,13 @@ hl.window_rule({
   no_focus    = false
 })
 
-hl.bind("SUPER + GRAVE", hl.dsp.workspace.toggle_special("foot-scratchpad"),
-  { description = "Terminal Scratchpad" }
+-- The keysym is lowercase "grave". "GRAVE" does not match, so Omarchy's
+-- Quake console on SUPER+grave was the bind that ran. ~ + Super toggles
+-- the tmux terminal scratchpad.
+hl.unbind("SUPER + grave")
+hl.unbind("SUPER + GRAVE")
+hl.bind("SUPER + grave", hl.dsp.workspace.toggle_special("foot-scratchpad"),
+  { description = "Tmux terminal" }
 )
 
 -- ================== Nvim Scratchpad ==================
@@ -266,6 +271,8 @@ for _, app in ipairs(webapps) do
   })
 end
 
+-- SUPER+Q was also Close window. Keep the query scratchpad only.
+hl.unbind("SUPER + Q")
 hl.bind(
   "SUPER + Q",
   hl.dsp.workspace.toggle_special(Scratch_name),
