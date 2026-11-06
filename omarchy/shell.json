@@ -1,31 +1,12 @@
 {
   "bar": {
-    "centerAnchor": "omarchy.clock",
     "layout": {
       "center": [
         {
-          "id": "io.github.stevehnh.bible-verse-of-the-day"
-        },
-        {
-          "id": "omarchy.weather"
-        },
-        {
-          "id": "omarchy.keyboard-layout"
-        },
-        {
-          "format": "dddd, MMMM dd, yyyy hh:mm AP - 'WEEK 'ww",
-          "formatAlt": "ddd, MMM dd yyyy hh:mmAP, 'W'ww",
           "id": "omarchy.clock",
+          "format": "d MMMM 'W'ww yyyy",
+          "formatAlt": "ddd, MMM dd yyyy hh:mmAP, 'W'ww",
           "verticalFormat": "HH\n—\nmm"
-        },
-        {
-          "id": "omarchy.system-update"
-        },
-        {
-          "id": "omarchy.indicators"
-        },
-        {
-          "id": "markbusking.pomodoro"
         }
       ],
       "left": [
@@ -41,10 +22,13 @@
       ],
       "right": [
         {
-          "id": "omarchy.agents"
+          "id": "omarchy.tray"
         },
         {
-          "id": "omarchy.tray"
+          "id": "omarchy.keyboard-layout"
+        },
+        {
+          "id": "omarchy.agents"
         },
         {
           "id": "jaime.bluetooth"
@@ -67,7 +51,52 @@
         {
           "id": "omarchy.power"
         }
-      ]
+      ],
+      "centerBegin": [
+        {
+          "id": "io.github.stevehnh.bible-verse-of-the-day"
+        },
+        {
+          "id": "omarchy.weather"
+        }
+      ],
+      "centerEnd": [
+        {
+          "id": "omarchy.elsewhen",
+          "cities": [
+            {
+              "name": "Toronto",
+              "zone": "America/Toronto"
+            },
+            {
+              "name": "London",
+              "zone": "Europe/London"
+            },
+            {
+              "name": "Dubai",
+              "zone": "Asia/Dubai"
+            },
+            {
+              "name": "Tokyo",
+              "zone": "Asia/Tokyo"
+            },
+            {
+              "name": "Los Angeles",
+              "zone": "America/Los_Angeles"
+            }
+          ]
+        },
+        {
+          "id": "omarchy.system-update"
+        },
+        {
+          "id": "omarchy.indicators"
+        },
+        {
+          "id": "markbusking.pomodoro"
+        }
+      ],
+      "tray": []
     },
     "position": "top",
     "transparent": true
